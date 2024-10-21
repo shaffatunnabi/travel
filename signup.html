@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Signup Page</title>
+</head>
+<body>
+    <div class="container">
+        <form id="signup-form" onsubmit="return validateSignup()">
+            <h2>Signup</h2>
+            <input type="text" id="signup-username" placeholder="Username" required>
+            <span id="username-error" class="error-message"></span>
+            
+            <input type="email" id="signup-email" placeholder="Email" required>
+            <span id="email-error" class="error-message"></span>
+
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <span id="password-error" class="error-message"></span>
+
+            <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required>
+            <span id="confirm-password-error" class="error-message"></span>
+
+            <input type="number" id="signup-age" placeholder="Age" min="1" required>
+            <span id="age-error" class="error-message"></span>
+
+            <button type="submit">Signup</button>
+            <button type="button" onclick="showLogin()">Already have an account? Login</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
