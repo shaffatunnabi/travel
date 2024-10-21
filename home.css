@@ -3,14 +3,18 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    font-weight: bolder;
+    color: black;
     background: #f4f4f4;
 }
 
 /* Navbar styles */
 .navbar {
-    background: #333;
-    color: #fff;
+    background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT65gPjvRwnXO9a14zpcqTZHoOQiY2yHBpxLQ&s');
+    color: #000000;
+   background-size: contain;
     display: flex;
+    font-weight: bolder;
     align-items: center;
     padding: 15px 20px;
     position: fixed;
@@ -20,11 +24,12 @@ body {
 }
 
 .logo {
+    color: black;
     margin-right: auto;
 }
 
 .logo a {
-    color: #fff;
+    color: rgb(255, 255, 255);
     text-decoration: none;
     font-size: 1.5em;
 }
@@ -51,7 +56,7 @@ body {
 }
 
 .nav-links li a:hover {
-    color: #007BFF;
+    color: #ff0000;
 }
 
 /* Button styles for login and signup */
