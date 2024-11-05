@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
-    <link rel="stylesheet" href="home.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'home.css' %}">
 </head>
 <body>
     <header>
@@ -19,8 +20,8 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <div class="auth-buttons">
-                <a href="login.html" class="button">Login</a>
-                <a href="signup.html" class="button">Sign Up</a>
+                <a href="{% url 'login' %}" class="button">Login</a>
+                <a href="{% url 'signup' %}" class="button">Sign Up</a>
             </div>
             <div class="burger">
                 <div class="line1"></div>
@@ -31,31 +32,31 @@
     </header>
 
     <section id="home">
-        <h1>Welcome to MyWebsite</h1>
+        <h1>Book Your Journey</h1>
         <p>Your journey starts here. Navigate through the options above to learn more.</p>
     </section>
 
     <section class="trip-cards">
         <div class="card">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 1">
-            <h3>Tropical Paradise</h3>
+            <h3>Maalam Jabba</h3>
             <p>Experience the serenity of a tropical beach with crystal-clear waters.</p>
-            <p class="price">$499</p>
-            <a href="#" class="button">Book Now</a>
+            <p class="price">Rs.15000</p>
+            <a href="{% url 'form' %}" class="button">Book Now</a>
         </div>
         <div class="card">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 2">
-            <h3>Mountain Adventure</h3>
+            <h3>Naran-Kaghan</h3>
             <p>Join us for an exhilarating adventure in the mountains.</p>
-            <p class="price">$399</p>
-            <a href="#" class="button">Book Now</a>
+            <p class="price">Rs.20000</p>
+            <a href="{% url 'form' %}" class="button">Book Now</a>
         </div>
         <div class="card">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 3">
-            <h3>City Getaway</h3>
+            <h3>Gilgit</h3>
             <p>Discover the vibrant life of the city with our exclusive city tour.</p>
-            <p class="price">$299</p>
-            <a href="#" class="button">Book Now</a>
+            <p class="price">Rs.30000</p>
+            <a href="{% url 'form' %}" class="button">Book Now</a>
         </div>
     </section>
 

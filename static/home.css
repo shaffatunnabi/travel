@@ -16,7 +16,7 @@ body {
     display: flex;
     font-weight: bolder;
     align-items: center;
-    padding: 15px 20px;
+    padding: 15px 15px;
     position: fixed;
     width: 100%;
     top: 0;
@@ -24,12 +24,12 @@ body {
 }
 
 .logo {
-    color: black;
+    color: rgb(191, 135, 14);
     margin-right: auto;
 }
 
 .logo a {
-    color: rgb(255, 255, 255);
+    color: rgb(255, 166, 0);
     text-decoration: none;
     font-size: 1.5em;
 }
@@ -49,7 +49,7 @@ body {
 }
 
 .nav-links li a {
-    color: #fff;
+    color: rgb(255, 166, 0);
     text-decoration: none;
     font-size: 1em;
     transition: color 0.3s;
