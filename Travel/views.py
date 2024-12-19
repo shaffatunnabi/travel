@@ -1,8 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from Travel.models import Person, Book
 
 def index(request):
-    return render(request, 'index.html')
+    if request.method == 'GET':  # Use GET since the form method is GET
+        search = request.GET.get('search')  # Get the search query
+        if search:
+            # You can add your search logic here
+            return HttpResponse(f"You searched for: {search}")
+    return render(request, 'index.html')  # Render the HTML template
 
 def login(request):
     if request.method == 'POST':
@@ -35,6 +40,7 @@ def signup(request):
         age = request.POST.get('age')
         person=Person(username=username, email=email, password=password, confirm_password=confirm_password, age=age)
         person.save()
+        return render(request, 'login.html')
     
     return render(request, 'signup.html')
 
