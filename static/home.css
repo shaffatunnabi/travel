@@ -199,3 +199,15 @@ body {
         max-width: 350px;
     }
 }
+
+/* Add these styles to your existing CSS */
+.welcome-text {
+    color: white;
+    margin-right: 15px;
+    font-size: 0.9em;
+}
+
+.auth-buttons {
+    display: flex;
+    align-items: center;
+}

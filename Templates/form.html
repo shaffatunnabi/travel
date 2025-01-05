@@ -11,25 +11,119 @@
 <body>
     <div class="form-container">
         <h2>Book Your Trip</h2>
-        <form id="booking-form" method="post">
+        <form id="booking-form" method="post" onsubmit="return validateForm()">
             {% csrf_token %}
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" 
+                    value="{{ initial_data.name }}"
+                    pattern="[A-Za-z ]{2,50}" 
+                    title="Name should only contain letters and be 2-50 characters long" 
+                    required readonly>
+                <span class="error-message" id="name-error"></span>
+            </div>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" 
+                    value="{{ initial_data.email }}"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                    title="Please enter a valid email address" 
+                    required readonly>
+                <span class="error-message" id="email-error"></span>
+            </div>
 
-            <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone" required>
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone" 
+                    pattern="[0-9]{10}" 
+                    title="Please enter a valid 10-digit phone number" required>
+                <span class="error-message" id="phone-error"></span>
+            </div>
 
-            <label for="numpeople">Number of People:</label>
-            <input type="number" id="numpeople" name="numpeople" min="1" required>
+            <div class="form-group">
+                <label for="numpeople">Number of People:</label>
+                <input type="number" id="numpeople" name="numpeople" 
+                    min="1" max="10" 
+                    title="Number of people must be between 1 and 10" required>
+                <span class="error-message" id="numpeople-error"></span>
+            </div>
 
             <button type="submit" class="button">Submit</button>
             <p id="book-message" class="message">{{ message }}</p>
-
         </form>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        function validateForm() {
+            let isValid = true;
+            const errors = {
+                name: '',
+                email: '',
+                phone: '',
+                numpeople: ''
+            };
+
+            // Name validation
+            const name = document.getElementById('name');
+            if (!/^[A-Za-z ]{2,50}$/.test(name.value)) {
+                errors.name = 'Name should only contain letters and be 2-50 characters long';
+                isValid = false;
+            }
+
+            // Email validation
+            const email = document.getElementById('email');
+            if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.value)) {
+                errors.email = 'Please enter a valid email address';
+                isValid = false;
+            }
+
+            // Phone validation
+            const phone = document.getElementById('phone');
+            if (!/^[0-9]{10}$/.test(phone.value)) {
+                errors.phone = 'Please enter a valid 10-digit phone number';
+                isValid = false;
+            }
+
+            // Number of people validation
+            const numpeople = document.getElementById('numpeople');
+            if (numpeople.value < 1 || numpeople.value > 10) {
+                errors.numpeople = 'Number of people must be between 1 and 10';
+                isValid = false;
+            }
+
+            // Display errors
+            Object.keys(errors).forEach(field => {
+                const errorElement = document.getElementById(`${field}-error`);
+                errorElement.textContent = errors[field];
+                if (errors[field]) {
+                    document.getElementById(field).classList.add('invalid');
+                } else {
+                    document.getElementById(field).classList.remove('invalid');
+                }
+            });
+
+            return isValid;
+        }
+
+        // Real-time validation
+        const inputs = ['name', 'email', 'phone', 'numpeople'];
+        inputs.forEach(field => {
+            document.getElementById(field).addEventListener('input', function() {
+                this.classList.remove('invalid');
+                document.getElementById(`${field}-error`).textContent = '';
+            });
+        });
+
+        // Disable editing of auto-filled fields
+        document.getElementById('name').readOnly = true;
+        document.getElementById('email').readOnly = true;
+
+        // Add visual indication for readonly fields
+        const readOnlyFields = document.querySelectorAll('input[readonly]');
+        readOnlyFields.forEach(field => {
+            field.classList.add('readonly');
+        });
+    </script>
 </body>
 </html>

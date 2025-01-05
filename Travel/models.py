@@ -12,9 +12,11 @@ def __str__(self):
 
 class Book(models.Model):
     name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100)
-    phone = models.IntegerField()
-    numpeople = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    numpeople = models.IntegerField()
+    user = models.ForeignKey(Person, on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-def __str__(self):
-    return self.name
+    def __str__(self):
+        return f"Booking by {self.name}"

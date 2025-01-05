@@ -58,4 +58,43 @@ button:hover {
     margin-top: -10px; /* Adjust spacing if needed */
     margin-bottom: 10px;
 }
+
+.navbar {
+    background-color: #333;
+    padding: 1rem;
+    color: white;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+}
+
+.auth-btn {
+    background-color: #4CAF50;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.auth-btn:hover {
+    background-color: #45a049;
+}
+
+.welcome-msg {
+    margin-right: 1rem;
+    color: #ddd;
+}
+
+.error-message {
+    color: red;
+    margin: 10px 0;
+}
  

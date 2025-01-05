@@ -20,153 +20,74 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <div class="auth-buttons">
-                <a href="{% url 'login' %}" class="button">Login</a>
-                <a href="{% url 'signup' %}" class="button">Sign Up</a>
+                {% if request.session.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="button">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="button">Login</a>
+                    <a href="{% url 'signup' %}" class="button">Sign Up</a>
+                {% endif %}
+            </div>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
             </div>
         </nav>
     </header>
 
     <section id="home">
-        <h1>Book Your Journey</h1>
-        <p>Your journey starts here. Navigate through the options above to learn more.</p>
-        <!-- Search Form -->
-        <form id="searchForm" style="text-align: center; margin-top: 20px;">
-            {% csrf_token %}
-            <input 
-                type="text" 
-                name="search" 
-                id="search" 
-                placeholder="Search area by name..." 
-                style=" 
-                    width: 300px; 
-                    padding: 10px; 
-                    border: 1px solid #ccc; 
-                    border-radius: 5px; 
-                    font-size: 16px;"
-            >
-            <button 
-                type="submit" 
-                id="submit" 
-                style=" 
-                    padding: 10px 20px; 
-                    margin-left: 5px; 
-                    background-color: #007BFF; 
-                    color: white; 
-                    border: none; 
-                    border-radius: 5px; 
-                    font-size: 16px; 
-                    cursor: pointer;">
-                Search
-            </button>
-        </form>
-        <div id="searchResults" style="text-align: center; margin-top: 20px;"></div>
+        <h1>Welcome to JointJourneys</h1>
+        <p>Discover amazing destinations and plan your next adventure</p>
     </section>
 
     <section class="trip-cards">
-        <div class="sections">
-            <div class="card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 1">
-                <h3>Maalam Jabba</h3>
-                <p>Experience the serenity of a tropical beach with crystal-clear waters.</p>
-                <p class="price">Rs.15000</p>
-                <a href="{% url 'form' %}" class="button">Book Now</a>
-            </div>
-            <div class="card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 2">
-                <h3>Naran-Kaghan</h3>
-                <p>Join us for an exhilarating adventure in the mountains.</p>
-                <p class="price">Rs.20000</p>
-                <a href="{% url 'form' %}" class="button">Book Now</a>
-            </div>
-            <div class="card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 3">
-                <h3>Gilgit</h3>
-                <p>Discover the vibrant life of the city with our exclusive city tour.</p>
-                <p class="price">Rs.30000</p>
-                <a href="{% url 'form' %}" class="button">Book Now</a>
-            </div>
+        <div class="card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDCy4i-sCq0eOXc0q0qxf14tM3Sm_ReI1ykg&s" alt="Trip 1">
+            <h3>Mountain Adventure</h3>
+            <p>Experience the thrill of mountain climbing</p>
+            <p class="price">$499</p>
+            <a href="{% url 'form' %}" class="button">Book Now</a>
         </div>
-        <div class="sections">
-            <div class="card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 1">
-                <h3>Maalam Jabba</h3>
-                <p>Experience the serenity of a tropical beach with crystal-clear waters.</p>
-                <p class="price">Rs.15000</p>
-                <a href="{% url 'form' %}" class="button">Book Now</a>
-            </div>
-            <div class="card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 2">
-                <h3>Naran-Kaghan</h3>
-                <p>Join us for an exhilarating adventure in the mountains.</p>
-                <p class="price">Rs.20000</p>
-                <a href="{% url 'form' %}" class="button">Book Now</a>
-            </div>
-            <div class="card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 3">
-                <h3>Gilgit</h3>
-                <p>Discover the vibrant life of the city with our exclusive city tour.</p>
-                <p class="price">Rs.30000</p>
-                <a href="{% url 'form' %}" class="button">Book Now</a>
-            </div>
+
+        <div class="card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDCy4i-sCq0eOXc0q0qxf14tM3Sm_ReI1ykg&s" alt="Trip 2">
+            <h3>Beach Paradise</h3>
+            <p>Relax on pristine beaches</p>
+            <p class="price">$599</p>
+            <a href="{% url 'form' %}" class="button">Book Now</a>
         </div>
-        <div id="naran" class="sections">
-            <div class="card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 1">
-                <h3>Maalam Jabba</h3>
-                <p>Experience the serenity of a tropical beach with crystal-clear waters.</p>
-                <p class="price">Rs.15000</p>
-                <a href="{% url 'form' %}" class="button">Book Now</a>
-            </div>
-            <div class="card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 2">
-                <h3>Naran-Kaghan</h3>
-                <p>Join us for an exhilarating adventure in the mountains.</p>
-                <p class="price">Rs.20000</p>
-                <a href="{% url 'form' %}" class="button">Book Now</a>
-            </div>
-            <div class="card">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 3">
-                <h3>Gilgit</h3>
-                <p>Discover the vibrant life of the city with our exclusive city tour.</p>
-                <p class="price">Rs.30000</p>
-                <a href="{% url 'form' %}" class="button">Book Now</a>
-            </div>
+
+        <div class="card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDCy4i-sCq0eOXc0q0qxf14tM3Sm_ReI1ykg&s" alt="Trip 3">
+            <h3>City Explorer</h3>
+            <p>Discover urban adventures</p>
+            <p class="price">$399</p>
+            <a href="{% url 'form' %}" class="button">Book Now</a>
         </div>
     </section>
+
     <script>
-        // JavaScript to handle search without reloading
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent the default form submission
+        // Mobile menu toggle
+        const burger = document.querySelector('.burger');
+        const nav = document.querySelector('.nav-links');
+        const navLinks = document.querySelectorAll('.nav-links li');
 
-            const searchQuery = document.getElementById('search').value.trim();
-            const searchResults = document.getElementById('searchResults');
+        burger.addEventListener('click', () => {
+            // Toggle Nav
+            nav.classList.toggle('active');
 
-            if (searchQuery.toLowerCase() === 'naran') {
-                searchResults.innerHTML = `
-                    <div class="card">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 1">
-                        <h3>Naran-Kaghan</h3>
-                        <p>Join us for an exhilarating adventure in the mountains.</p>
-                        <p class="price">Rs.20000</p>
-                        <a href="{% url 'form' %}" class="button">Book Now</a>
-                    </div>
-                `;
-            } else if (searchQuery.toLowerCase() === 'maalam jabba') {
-                searchResults.innerHTML = `
-                    <div class="card">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGPZEs6IMOtp6bd33pzfsWVyA8H3qVpJOwQQ&s" alt="Trip Image 1">
-                        <h3>Maalam Jabba</h3>
-                        <p>Experience the serenity of a tropical beach with crystal-clear waters.</p>
-                        <p class="price">Rs.15000</p>
-                        <a href="{% url 'form' %}" class="button">Book Now</a>
-                    </div>
-                `;
-            } else {
-                searchResults.innerHTML = `<p>No results found for "${searchQuery}"</p>`;
-            }
+            // Animate Links
+            navLinks.forEach((link, index) => {
+                if (link.style.animation) {
+                    link.style.animation = '';
+                } else {
+                    link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
+                }
+            });
+
+            // Burger Animation
+            burger.classList.toggle('toggle');
         });
     </script>
-
-    <script src="script.js"></script>
 </body>
 </html>
