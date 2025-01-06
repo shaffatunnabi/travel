@@ -9,17 +9,16 @@
 </head>
 <body>
     <header>
-        <nav class="navbar">
+        <nav class="navbar" style='margin-right: 6px;'>
             <div class="logo">
                 <a href="#">JointJourneys</a>
             </div>
             <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="{% url 'about' %}" >About</a></li>
+                <li><a href="{% url 'services' %}">Services</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
             </ul>
-            <div class="auth-buttons">
+            <div class="auth-buttons" style='margin-right: 36px;'>
                 {% if request.session.is_authenticated %}
                     <a href="{% url 'logout' %}" class="button">Logout</a>
                 {% else %}
@@ -35,33 +34,76 @@
         </nav>
     </header>
 
-    <section id="home">
-        <h1>Welcome to JointJourneys</h1>
-        <p>Discover amazing destinations and plan your next adventure</p>
+    <section id="home" style="background-image: url('https://img.freepik.com/free-photo/beautiful-shot-grassy-hills-covered-trees-near-mountains-dolomites-italy_181624-24400.jpg?t=st=1736174441~exp=1736178041~hmac=641e9818ed8df86c9c6535cee998100e64b3da3db63a91456463fed711ff89e1&w=1060'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+        <h1 id="destination-title">Welcome to JointJourneys</h1>
+        <p id="destination-subtitle">Discover amazing destinations and plan your next adventure</p>
+        
+        <div class="search-wrapper" style=' justify-content: center;
+        align-items: center;
+        display: flex;'>
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="destination-search" style='border-radius:20px; padding: 16px 92px;' placeholder="Search for anything" style="
+    padding: 10px;
+    border-radius: 10px;    ">
+            </div>
+        </div>
     </section>
 
-    <section class="trip-cards">
+    <section class="trip-cards" id="trip-cards-container" style="
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        padding: 20px;
+        margin: 40px auto;
+        max-width: 1200px;
+    ">
+        <!-- Initial 6 destination cards -->
         <div class="card">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDCy4i-sCq0eOXc0q0qxf14tM3Sm_ReI1ykg&s" alt="Trip 1">
-            <h3>Mountain Adventure</h3>
-            <p>Experience the thrill of mountain climbing</p>
-            <p class="price">$499</p>
+            <img src="https://picsum.photos/400/300?random=1" alt="Trip 1" id="card-image-1">
+            <h3 id="card-title-1">Paris Adventure</h3>
+            <p id="card-description-1">Experience the City of Light</p>
+            <p class="price" id="card-price-1">$699</p>
             <a href="{% url 'form' %}" class="button">Book Now</a>
         </div>
 
         <div class="card">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDCy4i-sCq0eOXc0q0qxf14tM3Sm_ReI1ykg&s" alt="Trip 2">
-            <h3>Beach Paradise</h3>
-            <p>Relax on pristine beaches</p>
-            <p class="price">$599</p>
+            <img src="https://picsum.photos/400/300?random=2" alt="Trip 2" id="card-image-2">
+            <h3 id="card-title-2">Bali Paradise</h3>
+            <p id="card-description-2">Tropical Island Getaway</p>
+            <p class="price" id="card-price-2">$899</p>
             <a href="{% url 'form' %}" class="button">Book Now</a>
         </div>
 
         <div class="card">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDCy4i-sCq0eOXc0q0qxf14tM3Sm_ReI1ykg&s" alt="Trip 3">
-            <h3>City Explorer</h3>
-            <p>Discover urban adventures</p>
-            <p class="price">$399</p>
+            <img src="https://picsum.photos/400/300?random=3" alt="Trip 3" id="card-image-3">
+            <h3 id="card-title-3">Tokyo Explorer</h3>
+            <p id="card-description-3">Modern Asian Adventure</p>
+            <p class="price" id="card-price-3">$799</p>
+            <a href="{% url 'form' %}" class="button">Book Now</a>
+        </div>
+
+        <div class="card">
+            <img src="https://picsum.photos/400/300?random=4" alt="Trip 4" id="card-image-4">
+            <h3 id="card-title-4">New York City</h3>
+            <p id="card-description-4">Urban American Experience</p>
+            <p class="price" id="card-price-4">$599</p>
+            <a href="{% url 'form' %}" class="button">Book Now</a>
+        </div>
+
+        <div class="card">
+            <img src="https://picsum.photos/400/300?random=5" alt="Trip 5" id="card-image-5">
+            <h3 id="card-title-5">Dubai Dreams</h3>
+            <p id="card-description-5">Luxury Desert Adventure</p>
+            <p class="price" id="card-price-5">$999</p>
+            <a href="{% url 'form' %}" class="button">Book Now</a>
+        </div>
+
+        <div class="card">
+            <img src="https://picsum.photos/400/300?random=6" alt="Trip 6" id="card-image-6">
+            <h3 id="card-title-6">Maldives Escape</h3>
+            <p id="card-description-6">Paradise on Earth</p>
+            <p class="price" id="card-price-6">$1299</p>
             <a href="{% url 'form' %}" class="button">Book Now</a>
         </div>
     </section>
@@ -88,6 +130,125 @@
             // Burger Animation
             burger.classList.toggle('toggle');
         });
+
+        // Predefined nearby destinations for common searches
+        const nearbyDestinations = {
+            'paris': ['Nice', 'London', 'Amsterdam', 'Brussels', 'Geneva'],
+            'tokyo': ['Osaka', 'Kyoto', 'Seoul', 'Shanghai', 'Hong Kong'],
+            'new york': ['Boston', 'Philadelphia', 'Washington DC', 'Toronto', 'Montreal'],
+            'dubai': ['Abu Dhabi', 'Doha', 'Muscat', 'Riyadh', 'Bahrain'],
+            'bali': ['Jakarta', 'Singapore', 'Kuala Lumpur', 'Phuket', 'Manila'],
+            'london': ['Manchester', 'Edinburgh', 'Dublin', 'Paris', 'Amsterdam'],
+            // Add more destination mappings as needed
+        };
+
+        function getRelatedDestinations(searchTerm) {
+            // Convert search term to lowercase for comparison
+            const search = searchTerm.toLowerCase();
+            
+            // Find exact or partial matches in our predefined destinations
+            for (let key in nearbyDestinations) {
+                if (key.includes(search) || search.includes(key)) {
+                    return nearbyDestinations[key];
+                }
+            }
+            
+            // If no match found, return generic nearby destinations
+            return [
+                'Popular Destination 1',
+                'Popular Destination 2',
+                'Popular Destination 3',
+                'Popular Destination 4',
+                'Popular Destination 5'
+            ];
+        }
+
+        function updateCards(destination) {
+            // Update the first card with the searched destination
+            document.getElementById('card-title-1').textContent = `${destination} Adventure`;
+            document.getElementById('card-description-1').textContent = 
+                `Experience the magic of ${destination}`;
+            document.getElementById('card-image-1').src = 
+                `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`;
+            document.getElementById('card-price-1').textContent = 
+                `$${Math.floor(Math.random() * (1000 - 300) + 300)}`;
+
+            // Get nearby destinations
+            const nearbyPlaces = getRelatedDestinations(destination);
+
+            // Update remaining cards with nearby destinations
+            for (let i = 2; i <= 6; i++) {
+                const nearbyPlace = nearbyPlaces[i-2];
+                document.getElementById(`card-title-${i}`).textContent = 
+                    `${nearbyPlace} Adventure`;
+                document.getElementById(`card-description-${i}`).textContent = 
+                    `Explore nearby ${nearbyPlace}`;
+                document.getElementById(`card-image-${i}`).src = 
+                    `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`;
+                document.getElementById(`card-price-${i}`).textContent = 
+                    `$${Math.floor(Math.random() * (1000 - 300) + 300)}`;
+            }
+        }
+
+        function searchDestination() {
+            const searchInput = document.getElementById('destination-search').value;
+            if (searchInput.trim() === '') return;
+
+            // Update the main title and subtitle
+            document.getElementById('destination-title').textContent = 
+                `Discover Amazing ${searchInput}`;
+            document.getElementById('destination-subtitle').textContent = 
+                `Experience the beauty of ${searchInput} - Book your adventure today!`;
+
+            // Update the cards with the searched destination
+            updateCards(searchInput);
+
+            // Store the search in session
+            storeSearch(searchInput);
+        }
+
+        function storeSearch(searchTerm) {
+            fetch(`/?search=${encodeURIComponent(searchTerm)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => console.log('Search stored:', data))
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Add search on Enter key press
+        document.getElementById('destination-search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchDestination();
+            }
+        });
+
+        // Real-time search suggestions
+        let searchTimeout;
+        document.getElementById('destination-search').addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (e.target.value.length >= 2) {
+                    // Update cards in real-time as user types
+                    updateCards(e.target.value);
+                }
+            }, 500);
+        });
+
+        // Function to update images periodically
+        function updateRandomImages() {
+            const cards = document.querySelectorAll('.card img');
+            cards.forEach((img, index) => {
+                const randomNum = Math.floor(Math.random() * 1000);
+                img.src = `https://picsum.photos/400/300?random=${randomNum}`;
+            });
+        }
+
+        // Update images every 30 seconds
+        setInterval(updateRandomImages, 30000);
     </script>
 </body>
 </html>

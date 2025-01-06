@@ -1,0 +1,344 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - JointJourneys</title>
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .contact-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .contact-info {
+            padding: 30px;
+        }
+
+        .contact-info h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .contact-details {
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .contact-item:hover {
+            transform: translateX(10px);
+            background: #f0f2f5;
+        }
+
+        .contact-item i {
+            font-size: 24px;
+            color: #007BFF;
+            margin-right: 15px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .contact-item-content {
+            flex: 1;
+        }
+
+        .contact-item-content h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .contact-item-content p {
+            margin: 5px 0 0;
+            color: #666;
+        }
+
+        .contact-form {
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .contact-form h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: #007BFF;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+
+        .social-links {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: #f0f2f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #007BFF;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: #007BFF;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                margin: 20px;
+            }
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.8em;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .form-group input:invalid,
+        .form-group textarea:invalid {
+            border-color: #dc3545;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007BFF;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include your existing navbar here -->
+    <header>
+        <nav class="navbar" style='margin-right: 6px;'>
+            <div class="logo">
+                <a href="{% url 'index' %}">JointJourneys</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'about' %}" >About</a></li>
+                <li><a href="{% url 'services' %}">Services</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+            <div class="auth-buttons" style='margin-right: 36px;'>
+                {% if request.session.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="button">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="button">Login</a>
+                    <a href="{% url 'signup' %}" class="button">Sign Up</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <div class="contact-container">
+        <div class="contact-info">
+            <h2>Get in Touch</h2>
+            <p>We'd love to hear from you. Please feel free to contact us through any of the following methods:</p>
+            
+            <div class="contact-details">
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="contact-item-content">
+                        <h3>Our Location</h3>
+                        <p>123 Travel Street, Adventure City, AC 12345</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <div class="contact-item-content">
+                        <h3>Phone</h3>
+                        <p>+1 234 567 890</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <div class="contact-item-content">
+                        <h3>Email</h3>
+                        <p>info@jointjourneys.com</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <div class="contact-item-content">
+                        <h3>Working Hours</h3>
+                        <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+
+        <div class="contact-form">
+            <h3>Send us a Message</h3>
+            <form action="#" method="POST" id="contactForm" onsubmit="return validateForm(event)">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" pattern="[A-Za-z ]{2,50}" 
+                           title="Name should be between 2 and 50 characters and contain only letters">
+                    <span class="error-message" id="nameError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" 
+                           pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                           title="Please enter a valid email address">
+                    <span class="error-message" id="emailError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" minlength="5" maxlength="100"
+                           title="Subject should be between 5 and 100 characters">
+                    <span class="error-message" id="subjectError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" minlength="10" maxlength="1000"
+                              title="Message should be between 10 and 1000 characters"></textarea>
+                    <span class="error-message" id="messageError"></span>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validateForm(event) {
+            event.preventDefault();
+            let isValid = true;
+            
+            // Clear previous error messages
+            document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+            
+            // Name validation
+            const name = document.getElementById('name');
+            if (!name.value.trim()) {
+                document.getElementById('nameError').textContent = 'Name is required';
+                isValid = false;
+            } else if (!/^[A-Za-z ]{2,50}$/.test(name.value.trim())) {
+                document.getElementById('nameError').textContent = 'Name should contain only letters and be between 2-50 characters';
+                isValid = false;
+            }
+            
+            // Email validation
+            const email = document.getElementById('email');
+            if (!email.value.trim()) {
+                document.getElementById('emailError').textContent = 'Email is required';
+                isValid = false;
+            } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.value.trim())) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address';
+                isValid = false;
+            }
+            
+            // Subject validation
+            const subject = document.getElementById('subject');
+            if (!subject.value.trim()) {
+                document.getElementById('subjectError').textContent = 'Subject is required';
+                isValid = false;
+            } else if (subject.value.trim().length < 5 || subject.value.trim().length > 100) {
+                document.getElementById('subjectError').textContent = 'Subject should be between 5 and 100 characters';
+                isValid = false;
+            }
+            
+            // Message validation
+            const message = document.getElementById('message');
+            if (!message.value.trim()) {
+                document.getElementById('messageError').textContent = 'Message is required';
+                isValid = false;
+            } else if (message.value.trim().length < 10 || message.value.trim().length > 1000) {
+                document.getElementById('messageError').textContent = 'Message should be between 10 and 1000 characters';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // If all validations pass, show success message and optionally submit the form
+                alert('Message sent successfully!');
+                document.getElementById('contactForm').reset();
+            }
+            
+            return isValid;
+        }
+    </script>
+</body>
+</html>

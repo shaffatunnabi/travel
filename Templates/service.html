@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    .service-page-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 20px;
+        background: #f5f5f5;
+    }
+
+    .chat-container {
+        max-width: 600px;
+        width: 100%;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        overflow: hidden;
+        height: 700px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-header {
+        background: #8a2be2;
+        color: white;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+    .chat-header img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .chat-header .status {
+        font-size: 0.9em;
+        color: #eee;
+    }
+
+    .chat-messages {
+        padding: 20px;
+        flex-grow: 1;
+        overflow-y: auto;
+        height: auto;
+        background: #fff;
+    }
+
+    .message {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .message.user {
+        flex-direction: row-reverse;
+    }
+
+    .message .avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .message .content {
+        max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 15px;
+        background: #f8f9fa;
+    }
+
+    .message.user .content {
+        background: #8a2be2;
+        color: white;
+    }
+
+    .message .timestamp {
+        font-size: 0.8em;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    .faq-buttons {
+        padding: 20px;
+        display: grid;
+        gap: 10px;
+        background: #f8f9fa;
+        border-top: 1px solid #eee;
+        flex-shrink: 0;
+    }
+
+    .faq-button {
+        padding: 12px 20px;
+        border: 2px solid #8a2be2;
+        border-radius: 25px;
+        background: white;
+        color: #8a2be2;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+
+    .faq-button:hover {
+        background: #8a2be2;
+        color: white;
+    }
+
+    .typing {
+        padding: 15px 20px;
+        color: #6c757d;
+        font-style: italic;
+        display: none;
+        background: #fff;
+        border-top: 1px solid #eee;
+    }
+
+    .typing.active {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="service-page-container">
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="{% static 'images/bot-avatar.png' %}" alt="AI Bot">
+            <div>
+                <h3>AI Bot</h3>
+                <div class="status">Online</div>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will appear here -->
+        </div>
+
+        <div class="typing" id="typingIndicator">
+            Typing....
+        </div>
+
+        <div class="faq-buttons">
+            <button class="faq-button" onclick="askQuestion(1)">
+                What are main advantages of using your service?
+            </button>
+            <button class="faq-button" onclick="askQuestion(2)">
+                How can I cancel my booking?
+            </button>
+            <button class="faq-button" onclick="askQuestion(3)">
+                Do you offer group discounts?
+            </button>
+            <button class="faq-button" onclick="askQuestion(4)">
+                What payment methods do you accept?
+            </button>
+            <button class="faq-button" onclick="askQuestion(5)">
+                How do I contact customer support?
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let socket = null;
+    
+    function connectWebSocket() {
+        console.log("Attempting WebSocket connection...");
+        
+        socket = new WebSocket(
+            `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/faq/`
+        );
+
+        socket.onopen = function(e) {
+            console.log("WebSocket Connected!");
+        };
+
+        socket.onclose = function(e) {
+            console.log("WebSocket Closed!");
+            // Try to reconnect
+            setTimeout(connectWebSocket, 2000);
+        };
+
+        socket.onerror = function(e) {
+            console.error("WebSocket Error!", e);
+        };
+
+        socket.onmessage = function(e) {
+            console.log("Message received:", e.data);
+            const data = JSON.parse(e.data);
+            
+            if (data.error) {
+                console.error("Error:", data.error);
+                return;
+            }
+
+            if (data.question) {
+                addMessage(data.question, 'user');
+            }
+            if (data.answer) {
+                showTypingIndicator(false);
+                setTimeout(() => {
+                    addMessage(data.answer, 'bot');
+                }, 500);
+            }
+        };
+    }
+
+    function askQuestion(questionId) {
+        if (!socket || socket.readyState !== WebSocket.OPEN) {
+            console.log("Socket not connected, attempting to connect...");
+            connectWebSocket();
+            setTimeout(() => askQuestion(questionId), 1000);
+            return;
+        }
+
+        showTypingIndicator(true);
+        socket.send(JSON.stringify({
+            'question_id': questionId.toString()
+        }));
+    }
+
+    function addMessage(text, sender) {
+        const messagesDiv = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.innerHTML = sender === 'user' ? '👤' : '🤖';
+
+        const content = document.createElement('div');
+        content.className = 'content';
+        content.textContent = text;
+
+        const timestamp = document.createElement('div');
+        timestamp.className = 'timestamp';
+        timestamp.textContent = new Date().toLocaleTimeString();
+
+        if (sender === 'user') {
+            messageDiv.appendChild(content);
+            messageDiv.appendChild(avatar);
+        } else {
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+        }
+        messageDiv.appendChild(timestamp);
+        
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function showTypingIndicator(show) {
+        const indicator = document.getElementById('typingIndicator');
+        indicator.className = show ? 'typing active' : 'typing';
+    }
+
+    // Connect when page loads
+    connectWebSocket();
+</script>
+{% endblock %} 

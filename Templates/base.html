@@ -12,6 +12,8 @@
     <nav class="navbar">
         <div class="nav-links">
             <a href="{% url 'index' %}">Home</a>
+        
+            <a href="{% url 'services' %}">Services</a>
             {% if is_authenticated %}
                 <span class="welcome-msg">Welcome, {{ username }}!</span>
                 <a href="{% url 'logout' %}" class="auth-btn">Logout</a>

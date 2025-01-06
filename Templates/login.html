@@ -7,7 +7,7 @@
     <link rel="stylesheet" href={% static "styles.css"%}>
     <title>Login Page</title>
 </head>
-<body>
+<body style="background-image: url('https://img.freepik.com/free-photo/red-canoes-sea-dock-near-calm-body-water_198523-39.jpg?t=st=1736173480~exp=1736177080~hmac=bc3721e8ef8a392c4537c4b2ef913b1360ca1a3114b1d1150483156bd281c207&w=1060'); background-size: cover; background-repeat: no-repeat; background-position: center;">
     <div class="container">
         <form id="login-form" method="post" action="{% url 'login' %}">
             {% csrf_token %}
@@ -21,9 +21,9 @@
         
     </div>
     <script>
-        {% comment %} function showSignup() {
+        function showSignup() {
             window.location.href = "{% url 'signup' %}";
-        } {% endcomment %}
+        } 
     </script>
     
 </body>
