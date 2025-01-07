@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <link rel="stylesheet" href="{% static 'home.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <header>
@@ -38,14 +39,10 @@
         <h1 id="destination-title">Welcome to JointJourneys</h1>
         <p id="destination-subtitle">Discover amazing destinations and plan your next adventure</p>
         
-        <div class="search-wrapper" style=' justify-content: center;
-        align-items: center;
-        display: flex;'>
-            <div class="search-container">
+        <div class="search-wrapper" style="justify-content: center; align-items: center; width: 100%; display: flex;">
+ 0           <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" id="destination-search" style='border-radius:20px; padding: 16px 92px;' placeholder="Search for anything" style="
-    padding: 10px;
-    border-radius: 10px;    ">
+                <input type="text" style="width: 100%;" id="destination-search" placeholder="Search for anything" style="border-radius: 20px; padding: 16px 92px;">
             </div>
         </div>
     </section>
@@ -107,6 +104,26 @@
             <a href="{% url 'form' %}" class="button">Book Now</a>
         </div>
     </section>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header">
+            <h3>Travel Assistant</h3>
+            <button onclick="toggleChat()" class="minimize-btn">−</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    Hello! I'm your travel assistant. How can I help you today?
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type your message..."
+                       onkeypress="if(event.key === 'Enter') sendMessage()">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Mobile menu toggle
@@ -249,6 +266,80 @@
 
         // Update images every 30 seconds
         setInterval(updateRandomImages, 30000);
+
+        // Chat Widget Functions
+        function toggleChat() {
+            const chatBody = document.getElementById('chatBody');
+            chatBody.style.display = chatBody.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        // Gemini API Configuration
+        const API_KEY = 'AIzaSyBGQdMdZCqXMg8JwFj0qbkIZwai_-qGvIo';
+        const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Add user message
+                addMessage(message, 'user');
+                input.value = '';
+                
+                // Add loading message
+                const loadingId = addMessage('Thinking...', 'bot');
+                
+                // Send request to Gemini API
+                fetch(`${API_URL}?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `You are a travel assistant for JointJourneys travel agency. 
+                                      Help with this query: ${message}`
+                            }]
+                        }]
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Remove loading message
+                    const loadingMsg = document.getElementById(loadingId);
+                    if (loadingMsg) loadingMsg.remove();
+                    
+                    // Extract and add response
+                    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 
+                                       "I'm sorry, I couldn't process that request.";
+                    addMessage(responseText, 'bot');
+                })
+                .catch(error => {
+                    // Remove loading message
+                    const loadingMsg = document.getElementById(loadingId);
+                    if (loadingMsg) loadingMsg.remove();
+                    
+                    console.error('Error:', error);
+                    addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+                });
+            }
+        }
+
+        function addMessage(message, type) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            const messageId = 'msg-' + Date.now();
+            
+            messageDiv.className = `message ${type}`;
+            messageDiv.id = messageId;
+            messageDiv.textContent = message;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageId;
+        }
     </script>
 </body>
 </html>

@@ -12,6 +12,8 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 import re
+from .chatbot import get_response
+import google.generativeai as genai
 
 # Configure logging
 logging.basicConfig(
@@ -134,3 +136,42 @@ def contact(request):
 
 def about(request):
     return render(request, 'about.html')
+
+def chatbot(request):
+    if request.method == 'POST':
+        try:
+            # Parse the request
+            data = json.loads(request.body)
+            message = data.get('message', '').strip()
+            
+            # Log the request
+            print(f"Received chat request: {message}")
+            
+            if not message:
+                return JsonResponse({
+                    'response': 'Please enter a message'
+                })
+            
+            # Check if API is working
+            if not hasattr(genai, 'configured'):
+                return JsonResponse({
+                    'response': 'Chat service is currently unavailable'
+                })
+            
+            # Get response
+            response = get_response(message)
+            
+            # Return response
+            return JsonResponse({
+                'response': response
+            })
+            
+        except Exception as e:
+            print(f"Error in chatbot view: {str(e)}")
+            return JsonResponse({
+                'response': 'Sorry, something went wrong. Please try again.'
+            })
+    
+    return JsonResponse({
+        'response': 'Invalid request method'
+    })
