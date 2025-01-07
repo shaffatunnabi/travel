@@ -286,6 +286,9 @@
                 addMessage(message, 'user');
                 input.value = '';
                 
+                // Log user message to console
+                console.log('\n[User Question]:', message);
+                
                 // Add loading message
                 const loadingId = addMessage('Thinking...', 'bot');
                 
@@ -314,13 +317,16 @@
                     const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 
                                        "I'm sorry, I couldn't process that request.";
                     addMessage(responseText, 'bot');
+                    
+                    // Log bot response to console
+                    console.log('\n[Bot Response]:', responseText);
                 })
                 .catch(error => {
                     // Remove loading message
                     const loadingMsg = document.getElementById(loadingId);
                     if (loadingMsg) loadingMsg.remove();
                     
-                    console.error('Error:', error);
+                    console.error('\n[Error]:', error);
                     addMessage('Sorry, I encountered an error. Please try again.', 'bot');
                 });
             }

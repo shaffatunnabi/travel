@@ -3,6 +3,7 @@ from Travel.models import Person, Book
 from .utils import DatabaseThread, save_person_thread, save_booking_thread, send_email_thread
 from django.http import JsonResponse
 import logging
+import sys
 import threading
 import concurrent.futures
 from datetime import datetime
@@ -18,7 +19,8 @@ import google.generativeai as genai
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(threadName)s - %(message)s'
+    format='%(asctime)s - %(message)s',
+    stream=sys.stdout  # Ensure output goes to terminal
 )
 logger = logging.getLogger(__name__)
 
@@ -144,8 +146,10 @@ def chatbot(request):
             data = json.loads(request.body)
             message = data.get('message', '').strip()
             
-            # Log the request
-            print(f"Received chat request: {message}")
+            # Log the request with clear formatting
+            print("\n" + "="*50, flush=True)
+            print("\n[User Question]:", message, flush=True)
+            print("-"*50, flush=True)
             
             if not message:
                 return JsonResponse({
@@ -154,6 +158,7 @@ def chatbot(request):
             
             # Check if API is working
             if not hasattr(genai, 'configured'):
+                print("[Error]: Chat service unavailable", flush=True)
                 return JsonResponse({
                     'response': 'Chat service is currently unavailable'
                 })
@@ -161,13 +166,17 @@ def chatbot(request):
             # Get response
             response = get_response(message)
             
+            # Log the response
+            print("\n[Bot Response]:", response, flush=True)
+            print("="*50 + "\n", flush=True)
+            
             # Return response
             return JsonResponse({
                 'response': response
             })
             
         except Exception as e:
-            print(f"Error in chatbot view: {str(e)}")
+            print("\n[Error]:", str(e), flush=True)
             return JsonResponse({
                 'response': 'Sorry, something went wrong. Please try again.'
             })

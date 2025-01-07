@@ -136,6 +136,110 @@
                 font-size: 0.8em;
             }
         }
+
+        /* Custom FAQ Section Styles */
+        .custom-faq-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .websocket-status {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .status-offline {
+            color: #dc3545;
+            margin-right: 10px;
+        }
+
+        .status-online {
+            color: #28a745;
+            margin-right: 10px;
+        }
+
+        .connect-btn {
+            padding: 5px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .quick-questions {
+            margin: 20px 0;
+        }
+
+        .quick-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .quick-buttons button {
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-buttons button:hover {
+            background: #e9ecef;
+        }
+
+        .question-input {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .question-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .question-input button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-history {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .question {
+            background: #f8f9fa;
+            margin-left: 20px;
+        }
+
+        .answer {
+            background: #e3f2fd;
+            margin-right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -256,11 +360,164 @@
         </div>        
     </div>
 
+    <!-- Custom FAQ Section -->
+    <div class="custom-faq-container">
+        <h2 class="section-title">Ask Your Question</h2>
+        
+        <!-- WebSocket Connection Status -->
+        <div class="websocket-status">
+            <span id="wsStatus" class="status-offline">WebSocket: Disconnected</span>
+            <button onclick="connectWebSocket()" class="connect-btn">Connect</button>
+        </div>
+
+        <!-- Quick Questions -->
+        <div class="quick-questions">
+            <h3>Common Questions:</h3>
+            <div class="quick-buttons">
+                <button onclick="askQuestion('What are your most popular destinations?')">Popular Destinations</button>
+                <button onclick="askQuestion('How can I get the best deals?')">Best Deals</button>
+                <button onclick="askQuestion('Do you have family packages?')">Family Packages</button>
+                <button onclick="askQuestion('What documents do I need for international travel?')">Travel Documents</button>
+            </div>
+        </div>
+
+        <!-- Custom Question Input -->
+        <div class="question-input">
+            <input type="text" id="customQuestion" placeholder="Type your question here..."
+                   onkeypress="if(event.key === 'Enter') askQuestion(this.value)">
+            <button onclick="askQuestion(document.getElementById('customQuestion').value)">Ask</button>
+        </div>
+
+        <!-- Chat History -->
+        <div class="chat-history" id="chatHistory">
+            <!-- Messages will appear here -->
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Mobile menu script -->
     <script>
+        let faqSocket = null;
+
+        // Predefined FAQ responses
+        const faqResponses = {
+            'What are your most popular destinations?': 
+                'Our most popular destinations include Paris, Tokyo, New York, Dubai, and Bali. Each offers unique experiences and we have special packages available.',
+            'How can I get the best deals?': 
+                'To get the best deals: 1) Book early, 2) Check our seasonal promotions, 3) Sign up for our newsletter, 4) Look for package deals, 5) Consider traveling during off-peak seasons.',
+            'Do you have family packages?': 
+                'Yes! We offer comprehensive family packages that include kid-friendly activities, family rooms, and special discounts for children under 12.',
+            'What documents do I need for international travel?': 
+                'Required documents typically include: 1) Valid passport, 2) Necessary visas, 3) Travel insurance documentation, 4) Booking confirmations, 5) Return tickets.',
+        };
+
+        function connectWebSocket() {
+            if (faqSocket && faqSocket.readyState === WebSocket.OPEN) {
+                console.log("WebSocket already connected");
+                return;
+            }
+
+            // Get the correct WebSocket URL based on the current protocol and host
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const host = window.location.hostname;
+            const port = '8000';  // Use the port where Daphne is running
+            const wsUrl = `${wsProtocol}//${host}:${port}/ws/faq/`;
+            
+            console.log("Connecting to WebSocket at:", wsUrl);
+            
+            try {
+                faqSocket = new WebSocket(wsUrl);
+
+                faqSocket.onopen = function(e) {
+                    document.getElementById('wsStatus').textContent = 'WebSocket: Connected';
+                    document.getElementById('wsStatus').className = 'status-online';
+                    console.log("FAQ WebSocket connected successfully");
+                };
+
+                faqSocket.onclose = function(e) {
+                    document.getElementById('wsStatus').textContent = 'WebSocket: Disconnected';
+                    document.getElementById('wsStatus').className = 'status-offline';
+                    console.log("WebSocket connection closed:", e.code, e.reason);
+                    
+                    // Only attempt to reconnect if the page is still active
+                    if (document.visibilityState === 'visible') {
+                        console.log("Attempting to reconnect in 5 seconds...");
+                        setTimeout(connectWebSocket, 5000);
+                    }
+                };
+
+                faqSocket.onerror = function(e) {
+                    console.error("WebSocket error occurred:", e);
+                    document.getElementById('wsStatus').textContent = 'WebSocket: Error';
+                    document.getElementById('wsStatus').className = 'status-offline';
+                };
+
+                faqSocket.onmessage = function(e) {
+                    console.log("Received message:", e.data);
+                    const data = JSON.parse(e.data);
+                    if (data.error) {
+                        addToChat('error', `Error: ${data.error}`);
+                        console.error("FAQ Error:", data.error);
+                    } else {
+                        addToChat('answer', data.answer);
+                        console.log("FAQ Answer:", data.answer);
+                    }
+                };
+            } catch (error) {
+                console.error("Error creating WebSocket connection:", error);
+                document.getElementById('wsStatus').textContent = 'WebSocket: Error';
+                document.getElementById('wsStatus').className = 'status-offline';
+            }
+        }
+
+        function askQuestion(question) {
+            if (!question.trim()) return;
+
+            // Add question to chat
+            addToChat('question', question);
+
+            // Clear input if it's a custom question
+            const input = document.getElementById('customQuestion');
+            if (input.value === question) {
+                input.value = '';
+            }
+
+            // Get predefined answer if available
+            const predefinedAnswer = faqResponses[question];
+            if (predefinedAnswer) {
+                setTimeout(() => addToChat('answer', predefinedAnswer), 500);
+            }
+
+            // Send to WebSocket if connected
+            if (faqSocket && faqSocket.readyState === WebSocket.OPEN) {
+                faqSocket.send(JSON.stringify({
+                    type: 'question',
+                    question: question
+                }));
+            }
+
+            // Log to terminal
+            console.log("\n" + "=".repeat(50));
+            console.log("\nQuestion Asked:", question);
+            if (predefinedAnswer) {
+                console.log("-".repeat(50));
+                console.log("\nAnswer:", predefinedAnswer);
+            }
+            console.log("=".repeat(50) + "\n");
+        }
+
+        function addToChat(type, text) {
+            const chatHistory = document.getElementById('chatHistory');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        // Existing mobile menu code
         const burger = document.querySelector('.burger');
         const nav = document.querySelector('.nav-links');
         const navLinks = document.querySelectorAll('.nav-links li');

@@ -32,21 +32,29 @@ def get_response(message):
         Please provide a helpful response:
         """
         
-        # Log the attempt
-        print(f"Attempting to get response for: {message}")
+        # Print user's message in terminal
+        print("\n" + "="*50)
+        print("\nUser asked:", message)
+        print("-"*50)
         
         # Generate response
         response = model.generate_content(prompt)
         
         # Check response
         if hasattr(response, 'text') and response.text:
-            return response.text.strip()
+            response_text = response.text.strip()
+            # Print bot's response in terminal
+            print("\nBot responded:", response_text)
+            print("="*50 + "\n")
+            return response_text
         else:
-            print("No response text received")
+            print("\nWarning: No response received from bot")
+            print("="*50 + "\n")
             return "I apologize, I couldn't generate a response. Please try again."
             
     except Exception as e:
-        print(f"Error generating response: {str(e)}")
+        print("\nError occurred:", str(e))
+        print("="*50 + "\n")
         return "I'm having trouble connecting to the service. Please try again later."
 
 def is_api_working():
